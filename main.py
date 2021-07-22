@@ -22,7 +22,7 @@ def url_ready(text):
             newText += "_"
     return(newText)
 
-def tardis_get_random():
+def get_random():
     response = requests.get("https://tardis.fandom.com/api.php?action=query&list=random&rnnamespace=0&rnlimit=1&format=json")
     page_json = response.json()
     print("Random page requested:")
@@ -32,7 +32,7 @@ def tardis_get_random():
     page = url_ready(page_url)
     return(page)
 
-def tardis_get_page_contents(page):
+def get_page_contents(page):
     page = url_ready(page)
     response = requests.get("https://tardis.fandom.com/api.php?action=parse&page="+page+"&prop=text&formatversion=2&format=json")
     page_json = response.json()
@@ -50,6 +50,17 @@ def tardis_get_page_contents(page):
 <'''+page_url+'>'
     return message
 
+def search_pages(term, count):
+    term = url_ready(term)
+    response = requests.get("https://tardis.fandom.com/api.php?action=query&list=search&srsearch="+term+"&srlimit="+count+"&format=json")
+    results_json = response.json()
+    results = ""
+    for n in range(0,int(count)):
+        page = results_json["query"]["search"][n]["title"]
+        results += "**"+str(n+1)+".** - "+page+": https://www.tardis.fandom.com/wiki/"+url_ready(page)+'''
+'''
+    return(results)
+
 @bot.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
@@ -65,14 +76,19 @@ async def help(ctx):
 `t?help` - this message
 `t?ping` - ping the bot (to see if I'm working
 `t?random` - get a random page from the (main) namespace
-`t?contents <page>` - get the contents of any Tardis page - **note: this does not yet work fully**''')
+`t?contents <page>` - get the contents of any Tardis page - **note: this does not yet work fully**
+`t?search <search query> <number of results>` - search Tardis Data Core. To use a multi-word search query, suround it in `"`''')
 
 @bot.command()
 async def random(ctx):
-    await ctx.reply(tardis_get_random())
+    await ctx.reply(get_random())
 
 @bot.command()
 async def contents(ctx, page):
-    await ctx.reply(tardis_get_page_contents(page))
+    await ctx.reply(get_page_contents(page))
+
+@bot.command()
+async def search(ctx, term, count):
+    await ctx.reply(search_pages(term, count))
     
 bot.run(os.getenv('DISCORD_TOKEN'))
