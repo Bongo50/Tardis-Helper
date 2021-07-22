@@ -81,18 +81,25 @@ To invite me, run `t?invite`.
 My profile picture is taken from <https://tardis.fandom.com/wiki/File:Favicon.ico>
 Tardis Data Core can be visited at <https://tardis.fandom.com/>.
 
+GitHub: <https://github.com/Bongo50/Tardis-Helper>
+Bongo50's Website: <https://www.bongo50.ga/>
+
 Tardis Helper is in no way officially affiliated with Tardis Data Core. Bongo50, however, does edit there frequently as [[User:Bongolium500]].''')
     
 @bot.command()
 async def help(ctx):
     await ctx.reply('''**== Help Message ==**
+**=== Commands ===**
 `t?help` - this message
 `t?info` - get some information about me
 `t?ping` - ping the bot (to see if I'm working
 `t?invite` - get an invite link
 `t?random` - get a random page from the (main) namespace
 `t?contents <page>` - get the contents of any Tardis page - **note: this does not yet work fully**
-`t?search <search query> <number of results>` - search Tardis Data Core. To use a multi-word search query, suround it in `"`''')
+`t?search <search query> <number of results>` - search Tardis Data Core. To use a multi-word search query, suround it in `"`
+
+**=== Other ===**
+Messages containg links marked as [[link text]] or templates marked as {{template name}} will be replied to with links to the pages in question.''')
 
 @bot.command()
 async def random(ctx):
@@ -114,14 +121,15 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     #check for uses of [[ and link accordingly
+    if message.author == bot.user:
+        return
+    
     if "[[" in message.content:
         message_list = message.content.split('[[')
-        print(message_list)
         links=[]
         for n in range(1,len(message_list)):
             link_list = message_list[n].split(']]')
             links.append(url_ready(link_list[0]))
-        print(links)
         urls = ""
         for link in links:
             urls += "<https://tardis.fandom.com/wiki/"+link+'''>
@@ -131,12 +139,10 @@ async def on_message(message):
     #check for uses of {{ and link accordingly
     if "{{" in message.content:
         message_list = message.content.split('{{')
-        print(message_list)
         links=[]
         for n in range(1,len(message_list)):
             link_list = message_list[n].split('}}')
             links.append(url_ready(link_list[0]))
-        print(links)
         urls = ""
         for link in links:
             urls += "<https://tardis.fandom.com/wiki/Template:"+link+'''>
