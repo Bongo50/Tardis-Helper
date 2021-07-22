@@ -61,43 +61,6 @@ def search_pages(term, count):
 '''
     return(results)
 
-@bot.event
-async def on_ready():
-    print('We have logged in as {0.user}'.format(bot))
-    await bot.change_presence(activity=discord.Game(name="t?help for help"))
-
-@bot.event
-async def on_message(message):
-    #check for uses of [[ and link accordingly
-    if "[[" in message.content:
-        message_list = message.content.split('[[')
-        print(message_list)
-        links=[]
-        for n in range(1,len(message_list)):
-            link_list = message_list[n].split(']]')
-            links.append(url_ready(link_list[0]))
-        print(links)
-        urls = ""
-        for link in links:
-            urls += "<https://tardis.fandom.com/wiki/"+link+'''>
-'''
-        await message.reply(urls)
-
-    #check for uses of {{ and link accordingly
-    if "{{" in message.content:
-        message_list = message.content.split('{{')
-        print(message_list)
-        links=[]
-        for n in range(1,len(message_list)):
-            link_list = message_list[n].split('}}')
-            links.append(url_ready(link_list[0]))
-        print(links)
-        urls = ""
-        for link in links:
-            urls += "<https://tardis.fandom.com/wiki/Template:"+link+'''>
-'''
-        await message.reply(urls)
-        
 @bot.command()
 async def ping(ctx):
     await ctx.reply('pong')
@@ -142,5 +105,43 @@ async def contents(ctx, page):
 @bot.command()
 async def search(ctx, term, count):
     await ctx.reply(search_pages(term, count))
+
+@bot.event
+async def on_ready():
+    print('We have logged in as {0.user}'.format(bot))
+    await bot.change_presence(activity=discord.Game(name="t?help for help"))
+
+@bot.event
+async def on_message(message):
+    #check for uses of [[ and link accordingly
+    if "[[" in message.content:
+        message_list = message.content.split('[[')
+        print(message_list)
+        links=[]
+        for n in range(1,len(message_list)):
+            link_list = message_list[n].split(']]')
+            links.append(url_ready(link_list[0]))
+        print(links)
+        urls = ""
+        for link in links:
+            urls += "<https://tardis.fandom.com/wiki/"+link+'''>
+'''
+        await message.reply(urls)
+
+    #check for uses of {{ and link accordingly
+    if "{{" in message.content:
+        message_list = message.content.split('{{')
+        print(message_list)
+        links=[]
+        for n in range(1,len(message_list)):
+            link_list = message_list[n].split('}}')
+            links.append(url_ready(link_list[0]))
+        print(links)
+        urls = ""
+        for link in links:
+            urls += "<https://tardis.fandom.com/wiki/Template:"+link+'''>
+'''
+        await message.reply(urls)
+    await bot.process_commands(message)
     
 bot.run(os.getenv('DISCORD_TOKEN'))
