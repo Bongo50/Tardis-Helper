@@ -61,6 +61,8 @@ def search_pages(term, count):
 '''
     return(results)
 
+
+
 @bot.command()
 async def ping(ctx):
     await ctx.reply('pong')
@@ -68,6 +70,10 @@ async def ping(ctx):
 @bot.command()
 async def invite(ctx):
     await ctx.reply('https://discord.com/api/oauth2/authorize?client_id=867699991245619231&permissions=2148002880&scope=bot')
+
+@bot.command()
+async def servercount(ctx):
+    await ctx.reply("I am a member of "+str(len(bot.guilds))+" servers.")
 
 @bot.command()
 async def info(ctx):
@@ -93,6 +99,7 @@ async def help(ctx):
 `t?help` - this message
 `t?info` - get some information about me
 `t?ping` - ping the bot (to see if I'm working
+`t?servercount` - count the number of servers I'm in
 `t?invite` - get an invite link
 `t?random` - get a random page from the (main) namespace
 `t?contents <page>` - get the contents of any Tardis page - **note: this does not yet work fully**
@@ -112,6 +119,8 @@ async def contents(ctx, page):
 @bot.command()
 async def search(ctx, term, count):
     await ctx.reply(search_pages(term, count))
+
+
 
 @bot.event
 async def on_ready():
