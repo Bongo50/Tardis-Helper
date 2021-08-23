@@ -61,6 +61,23 @@ def search_pages(term, count):
 '''
     return(results)
 
+def smw_query(term, count):
+    newterm = ""
+    for char in term:
+        if char != " ":
+            newterm += char
+        elif char == " ":
+            newterm += "%20"
+    term = newterm
+    response = requests.get("https://tardis.fandom.com/api.php?action=ask&query="+term+"|%3FModification%20date|sort%3DModification%20date|order%3Ddesc&format=json&api_version=3")
+    results_json = response.json()
+    results = ""
+    for n in range(0,int(count)):
+        page = results_json[0]["query"]["results"][n].keys()
+        print(page)
+        results += "**"+str(n+1)+".** - "+page+": <https://tardis.fandom.com/wiki/"+url_ready(page)+'''>
+'''
+    return(results)
 
 
 @bot.command()
@@ -113,12 +130,16 @@ async def random(ctx):
     await ctx.reply(get_random())
 
 @bot.command()
-async def contents(ctx, page):
+async def contents(ctx, *, page):
     await ctx.reply(get_page_contents(page))
 
 @bot.command()
 async def search(ctx, term, count):
     await ctx.reply(search_pages(term, count))
+
+@bot.command()
+async def smwquery(ctx, term, count):
+    await ctx.reply(smw_query(term, count))
 
 
 
